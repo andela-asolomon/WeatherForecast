@@ -7,7 +7,7 @@ $(function(){
       div: '#map',
       lat:  6.441158,
       lng:  3.417977,
-      zoom: 10,
+      zoom: 11,
       panControl : false,
 		click: function(e){
 
@@ -35,8 +35,8 @@ $(function(){
 
 				try{
 
-					var weatherAPI = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ position.coords.lat +
-											'&lon='+ position.coords.lon +'&callback=?'
+					var weatherAPI = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ position.coords.latitude +
+											'&lon='+ position.coords.longitude +'&callback=?'
 
 						$.getJSON(weatherAPI, function(response){
 
@@ -169,6 +169,7 @@ $(function(){
 		}
 
     });
+
 
 	var search = $('#search').click(function(e) {
 		e.preventDefault();
