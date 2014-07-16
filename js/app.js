@@ -5,9 +5,9 @@ $(function(){
 
 	var map = new GMaps({
       div: '#map',
-      lat:  51.503324,
-      lng: -0.119543,
-      zoom: 13,
+      lat:  6.441158,
+      lng:  3.417977,
+      zoom: 10,
       panControl : false,
 		click: function(e){
 
@@ -35,8 +35,8 @@ $(function(){
 
 				try{
 
-					var weatherAPI = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ lat +
-											'&lon='+ lon +'&callback=?'
+					var weatherAPI = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ position.coords.lat +
+											'&lon='+ position.coords.lon +'&callback=?'
 
 						$.getJSON(weatherAPI, function(response){
 
