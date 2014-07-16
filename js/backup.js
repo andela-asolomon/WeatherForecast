@@ -58,7 +58,23 @@ $(function(){
 									moment(localTime).calendar(),	// We are using the moment.js library to format the date
 									this.weather[0].main + ' <b>' + convertTemperature(this.main.temp_min) + '°' + DEG +
 															' / ' + convertTemperature(this.main.temp_max) + '°' + DEG+'</b>'
-								);	
+								);
+
+								switch (this.weather[0].main){
+									case "Rain":
+										$('body').css('background', 'blue');
+										break;
+									case "Clouds":
+										$('body').css('background', 'red');
+										break;
+									case "Clear":
+										$('body').css('background', 'orange');
+										break;
+									default:
+										$('body').css('background', 'inherit');
+								}	
+
+								console.log("current weather is " + this.weather[0].main);
 
 							});
 
@@ -186,4 +202,5 @@ $(function(){
 		});
 		$('#address').focus().val('');
 	});
+
 });

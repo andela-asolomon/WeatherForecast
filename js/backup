@@ -3,11 +3,29 @@ var map;
 $(function(){
 
 
+	var search = $('#search').click(function(e) {
+		e.preventDefault();
+
+		GMaps.geocode({
+		  address: $('#address').val(),
+		  callback: function(results, status) {
+		    if (status == 'OK') {
+		      var latlng = results[0].geometry.location;
+		      map.setCenter(latlng.lat(), latlng.lng());
+		      map.addMarker({
+		        lat: latlng.lat(),
+		        lng: latlng.lng()
+		      });
+		    }
+		  }
+		});
+	});
+
 	var map = new GMaps({
       div: '#map',
       lat:  51.503324,
       lng: -0.119543,
-      zoom: 13,
+      zoom: 10,
       panControl : false,
 		click: function(e){
 
@@ -58,7 +76,7 @@ $(function(){
 									moment(localTime).calendar(),	// We are using the moment.js library to format the date
 									this.weather[0].main + ' <b>' + convertTemperature(this.main.temp_min) + '°' + DEG +
 															' / ' + convertTemperature(this.main.temp_max) + '°' + DEG+'</b>'
-								);	
+								);
 
 							});
 
@@ -87,8 +105,6 @@ $(function(){
 
 				scroller.append(markup);
 			}
-
-
 
 			/* Handling the previous / next arrows */
 
@@ -167,23 +183,6 @@ $(function(){
 				weatherDiv.addClass('error').html(msg);
 			}
 		}
-
     });
 
-	var search = $('#search').click(function(e) {
-		e.preventDefault();
-
-		GMaps.geocode({
-		  address: $('#address').val(),
-		  callback: function(results, status) {
-		    if (status == 'OK') {
-		      var latlng = results[0].geometry.location;
-		      map.setCenter(latlng.lat(), latlng.lng());
-		      map.removeMarkers();
-		      map.addMarker({ lat: latlng.lat(), lng: latlng.lng() });
-		    }
-		  }
-		});
-		$('#address').focus().val('');
-	});
 });
