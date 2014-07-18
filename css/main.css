@@ -272,9 +272,24 @@ p.location b{
     float: right;
 }
 
+/*#map:before {
+	background: url("../img/preloader.gif") no-repeat center center #111;
+	border: none;
+	border-radius: 50% 50% 50% 50%;
+	box-shadow: 0 1px 2px #444;
+	content: "";
+	height: 44px;
+	left: 50%;
+	margin: auto;
+	opacity: 0.7;
+	position: absolute;
+	top: -200px;
+	right: 200px;
+	width: 44px;	
+}*/
+
 input[type=button]{
 	border-radius: 20px;
-	background: lightblue;
 	border: 5px solid white; 
     -webkit-box-shadow: 
       inset 0 0 8px  rgba(0,0,0,0.1),
@@ -286,8 +301,9 @@ input[type=button]{
       inset 0 0 8px  rgba(0,0,0,0.1),
             0 0 16px rgba(0,0,0,0.1); 
     padding: 15px;
-    background: rgba(255,255,255,0.5);
+    background: lightgreen;
     margin: 0 0 10px 20px;
+   
 }
 
 #panel {
@@ -345,4 +361,13 @@ footer {
   width: 100%;
   font-family: 'Open Sans Condensed', sans-serif;
   font-weight: bold;
+}
+
+#describe {
+	color: white;
+	position: relative;
+	top: -590px;
+	left: 100px;
+	font-weight: bold;
+
 }

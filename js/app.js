@@ -1,18 +1,6 @@
 var map;
 
-$(function(){
-
-
-	var map = new GMaps({
-      div: '#map',
-      lat:  6.441158,
-      lng:  3.417977,
-      zoom: 11,
-      panControl : false,
-		click: function(e){
-
-			var lat = e.latLng.lat();
-			var lon = e.latLng.lng();
+var weather = function(lat, lon) {
 
 			var DEG = 'c'; // c for celsius, f for fahrenheit
 
@@ -20,23 +8,15 @@ $(function(){
 				scroller = $('#scroller'),
 				location = $('p.location');
 
-			// Does this browser support geolocation?
-			if (navigator.geolocation) {
-				navigator.geolocation.getCurrentPosition(locationSuccess, locationError);
-			}
-			else{
-				showError("Your browser does not support Geolocation!");
-			}
-
 			// Get user's location, and use OpenWeatherMap
 			// to get the location name and weather forecast
 
-			function locationSuccess(position) {
+			function locationSuccess() {
 
 				try{
 
-					var weatherAPI = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ position.coords.latitude +
-											'&lon='+ position.coords.longitude +'&callback=?'
+					var weatherAPI = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ lat +
+											'&lon='+ lon +'&callback=?'
 
 						$.getJSON(weatherAPI, function(response){
 
@@ -58,14 +38,17 @@ $(function(){
 									moment(localTime).calendar(),	// We are using the moment.js library to format the date
 									this.weather[0].main + ' <b>' + convertTemperature(this.main.temp_min) + '°' + DEG +
 															' / ' + convertTemperature(this.main.temp_max) + '°' + DEG+'</b>'
-								);	
+								);
 
+							console.log(convertTemperature(this.main.temp_min));
+							// console.log(convertTemperature(this.main.temp_max));
 							});
 
 							// Add the location to the page
 							location.html(city +', <b>'+country+'</b>');
 
-							weatherDiv.addClass('loaded');
+							weatherDiv.addClass('loaded').hide();
+							weatherDiv.addClass('loaded').show('slow');
 
 							// Set the slider to the first slide
 							showSlide(0);
@@ -78,7 +61,11 @@ $(function(){
 				}
 			}
 
+			//call the locationSuccess function to load weather with lat and lon
+			locationSuccess();
+
 			function addWeather(icon, day, condition){
+
 
 				var markup = '<li>'+
 					'<img src="img/icons/'+ icon +'.png" />'+
@@ -87,7 +74,6 @@ $(function(){
 
 				scroller.append(markup);
 			}
-
 
 
 			/* Handling the previous / next arrows */
@@ -166,11 +152,43 @@ $(function(){
 			function showError(msg){
 				weatherDiv.addClass('error').html(msg);
 			}
+
+};
+
+$(function(){
+
+
+	var map = new GMaps({
+      div: '#map',
+      lat:  6.430556,
+      lng:  3.3958333,
+      zoom: 11,
+      panControl : false,
+		click: function(e){
+
+			weather(e.latLng.lat(), e.latLng.lng());
+			map.removeMarkers();
+			map.addMarker({
+			      lat: e.latLng.lat(),
+			      lng: e.latLng.lng()
+	    	});
 		}
 
     });
 
+    map.addMarker({
+      lat: 6.430556,
+      lng: 3.3958333
+    });
 
+	
+	$("#address").keyup(function(event){
+	     if(event.keyCode == 13){
+	         $("#search").click();
+	     }
+	});
+
+	
 	var search = $('#search').click(function(e) {
 		e.preventDefault();
 
@@ -180,11 +198,32 @@ $(function(){
 		    if (status == 'OK') {
 		      var latlng = results[0].geometry.location;
 		      map.setCenter(latlng.lat(), latlng.lng());
+		      weather(latlng.lat(), latlng.lng());
 		      map.removeMarkers();
 		      map.addMarker({ lat: latlng.lat(), lng: latlng.lng() });
 		    }
 		  }
 		});
+		// $('#describe').html('<p> You are currently viewing the forecast for ' + $('#address').val() + '</p>');
 		$('#address').focus().val('');
 	});
+
+	GMaps.geolocate({
+    success: function(position){
+      weather(position.coords.latitude, position.coords.longitude);
+
+      map.removeMarkers();
+      map.addMarker({
+        lat: position.coords.latitude,
+        lng: position.coords.longitude
+      });
+    },
+    error: function(error){
+      alert('Geolocation failed: '+error.message);
+    },
+    not_supported: function(){
+      alert("Your browser does not support geolocation");
+    }
+  });
+
 });
